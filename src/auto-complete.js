@@ -41,6 +41,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
         self.reset = function() {
             lastPromise = null;
 
+            self.totalItemCount = 0;
             self.items = [];
             self.visible = false;
             self.index = -1;
@@ -69,6 +70,7 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
 
                 items = tiUtil.makeObjectArray(items.data || items, options.tagsInput.displayProperty);
                 items = getDifference(items, tags);
+                self.totalItemCount = items.length;
                 self.items = items.slice(0, options.maxResultsToShow);
 
                 if (self.items.length > 0) {
@@ -95,6 +97,10 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             }
             self.index = index;
             self.selected = self.items[index];
+        };
+        self.headerText = function() {
+            var itemPlural = 'item' + (self.totalItemCount !== 1 ? 's' : '');
+            return 'Showing ' + self.items.length + ' of ' + self.totalItemCount + ' ' + itemPlural;
         };
 
         self.reset();
