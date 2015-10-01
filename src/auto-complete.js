@@ -27,6 +27,11 @@
  *                                       gains focus. The current input value is available as $query.
  * @param {boolean=} [selectFirstMatch=true] Flag indicating that the first match will be automatically selected once
  *                                           the suggestion list is shown.
+ * @param {boolean=} [truncateTagText=true] Flag indicating if we should truncate displayed tag text programatically.
+ * @param {number=} [truncateToChars=200] Maximum number of characters to display in an autocomplete row. If a tag is
+ *                                        truncated, this count will include the ellipsis.
+ * @param {boolean=} [truncateBeginning=true] Flag indicating if we should truncate the tag text in the beginning (true)
+ *                                            or at the end (false). This is only used if truncateTagText is true.
  */
 tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tagsInputConfig, tiUtil) {
     function SuggestionList(loadFn, options) {
@@ -125,7 +130,10 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 loadOnDownArrow: [Boolean, false],
                 loadOnEmpty: [Boolean, false],
                 loadOnFocus: [Boolean, false],
-                selectFirstMatch: [Boolean, true]
+                selectFirstMatch: [Boolean, true],
+                truncateTagText: [Boolean, true],
+                truncateToChars: [Number, 200],
+                truncateBeginning: [Boolean, true]
             });
 
             options = scope.options;
@@ -167,9 +175,26 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 return added;
             };
 
-            scope.highlight = function(item) {
+            scope.getTitleText = function(item) {
+              return getDisplayText(item);
+            };
+
+            scope.getDisplayText = function(item) {
                 var text = getDisplayText(item);
+                var textLength = text.length;
+                // truncate tag text
+                if (options.truncateTagText && textLength > options.truncateToChars) {
+                  // beginning truncate: eg. ("foobar", 3) -> "...bar"
+                  if (options.truncateBeginning) {
+                    text = '...' + text.substr(textLength - options.truncateToChars + 3);
+                  }
+                  // end truncate: eg. ("foobar", 3) -> "foo..."
+                  else {
+                    text = text.substr(0, options.truncateToChars - 3) + '...';
+                  }
+                }
                 text = tiUtil.encodeHTML(text);
+                // highlight tag text
                 if (options.highlightMatchedText) {
                     text = tiUtil.safeHighlight(text, tiUtil.encodeHTML(suggestionList.query));
                 }

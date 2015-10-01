@@ -6,10 +6,11 @@
   </div>
   <ul class="suggestion-list">
     <li class="suggestion-item"
-        ng-repeat="item in suggestionList.items track by track(item)"
-        ng-class="{selected: item == suggestionList.selected}"
-        ng-click="addSuggestionByIndex($index)"
-        ng-mouseenter="suggestionList.select($index)"
-        ng-bind-html="highlight(item)"></li>
+      ng-attr-title="{{getTitleText(item)}}"
+      ng-repeat="item in suggestionList.items track by track(item)"
+      ng-class="{selected: item == suggestionList.selected}"
+      ng-click="addSuggestionByIndex($index)"
+      ng-mouseenter="suggestionList.select($index)"
+      ng-bind-html="getDisplayText(item)"></li>
   </ul>
 </div>
