@@ -46,7 +46,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
         self.reset = function() {
             lastPromise = null;
 
-            self.totalItemCount = 0;
+            self.page = 1;
+            self.allItems = [];
             self.items = [];
             self.visible = false;
             self.index = -1;
@@ -74,9 +75,8 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
                 }
 
                 items = tiUtil.makeObjectArray(items.data || items, options.tagsInput.displayProperty);
-                items = getDifference(items, tags);
-                self.totalItemCount = items.length;
-                self.items = items.slice(0, options.maxResultsToShow);
+                self.allItems = getDifference(items, tags);
+                self.setPage(1);
 
                 if (self.items.length > 0) {
                     self.show();
@@ -104,8 +104,68 @@ tagsInput.directive('autoComplete', function($document, $timeout, $sce, $q, tags
             self.selected = self.items[index];
         };
         self.headerText = function() {
-            var itemPlural = 'item' + (self.totalItemCount !== 1 ? 's' : '');
-            return 'Showing ' + self.items.length + ' of ' + self.totalItemCount + ' ' + itemPlural;
+            if(self.items.length === 0) {
+                return 'No items';
+            }
+            var startIndex = 1 + self.currentItemStartIndex();
+            var endIndex = startIndex + self.items.length - 1;
+            var itemPlural = 'item' + (self.items.length !== 1 ? 's' : '');
+            var rangeText = startIndex === endIndex ? startIndex : (startIndex + ' - ' + endIndex);
+            return 'Showing ' + itemPlural + ' ' + rangeText + ' of ' + self.allItems.length;
+        };
+
+        self.firstPage = function() {
+            if(self.page === 1) {
+                return;
+            }
+            self.setPage(1);
+        };
+        self.lastPage = function() {
+            if(self.page === self.numberOfPages()) {
+                return;
+            }
+            self.setPage(self.numberOfPages());
+        };
+        self.previousPage = function() {
+            if(self.disablePrevious()) {
+                return;
+            }
+            self.setPage(self.page - 1);
+        };
+        self.nextPage = function() {
+            if(self.disableNext()) {
+                return;
+            }
+            self.setPage(self.page + 1);
+        };
+        self.numberOfPages = function() {
+            return Math.ceil(self.allItems.length / options.maxResultsToShow);
+        };
+        self.hasMorePages = function() {
+            return self.numberOfPages() > self.page;
+        };
+        self.hasPreviousPages = function() {
+            return self.page > 1;
+        };
+        self.currentItemStartIndex = function() {
+            return (self.page - 1) * options.maxResultsToShow;
+        };
+        self.setPage = function(page) {
+            self.page = page;
+            var startIndex = self.currentItemStartIndex();
+            self.items = self.allItems.slice(startIndex, startIndex + options.maxResultsToShow);
+        };
+        self.disableFirst = function() {
+            return self.page === 1;
+        };
+        self.disableLast = function() {
+            return self.page === self.numberOfPages();
+        };
+        self.disablePrevious = function() {
+            return !self.hasPreviousPages();
+        };
+        self.disableNext = function() {
+            return !self.hasMorePages();
         };
 
         self.reset();

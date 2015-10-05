@@ -1,8 +1,27 @@
 <div class="autocomplete" ng-show="suggestionList.visible"> 
   <div class="suggestion-list-header">
+    <div class="suggestion-list-pager">
+      <a
+        title="First page of results"
+        ng-disabled="suggestionList.disableFirst()"
+        ng-click="suggestionList.firstPage()">&laquo;</a>
+      <a
+        title="Previous page of results"
+        ng-disabled="suggestionList.disablePrevious()"
+        ng-click="suggestionList.previousPage()">&lsaquo;</a>
+      <a
+        title="Next page of results"
+        ng-disabled="suggestionList.disableNext()"
+        ng-click="suggestionList.nextPage()">&rsaquo;</a>
+      <a
+        title="Last page of results"
+        ng-disabled="suggestionList.disableLast()"
+        ng-click="suggestionList.lastPage()">&raquo;</a>
+    </div>
     <p
       class="suggestion-list-header-inner"
-      ng-bind="suggestionList.headerText()"></p>
+      ng-bind="suggestionList.headerText()">
+    </p>
   </div>
   <ul class="suggestion-list">
     <li class="suggestion-item"

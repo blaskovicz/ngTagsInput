@@ -134,7 +134,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestions().length).toBe(2);
             expect(getSuggestionText(0)).toBe('Item1');
             expect(getSuggestionText(1)).toBe('Item2');
-            expect(getSuggestionHeaderText()).toBe('Showing 2 of 2 items');
+            expect(getSuggestionHeaderText()).toBe('Showing items 1 - 2 of 2');
         });
 
         it('renders all elements returned by the load function that aren\'t already added ($http promise)', function() {
@@ -146,7 +146,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestions().length).toBe(2);
             expect(getSuggestionText(0)).toBe('Item1');
             expect(getSuggestionText(1)).toBe('Item2');
-            expect(getSuggestionHeaderText()).toBe('Showing 2 of 2 items');
+            expect(getSuggestionHeaderText()).toBe('Showing items 1 - 2 of 2');
         });
 
         it('renders all elements returned by the load function that aren\'t already added (non-string items)', function() {
@@ -170,7 +170,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(2)).toBe('[object Object]');
             expect(getSuggestionText(3)).toBe('');
             expect(getSuggestionText(4)).toBe('');
-            expect(getSuggestionHeaderText()).toBe('Showing 5 of 5 items');
+            expect(getSuggestionHeaderText()).toBe('Showing items 1 - 5 of 5');
         });
 
         it('renders all elements returned by the load function that aren\'t already added (non-promise)', function() {
@@ -194,7 +194,7 @@ describe('autoComplete directive', function() {
 
             // Assert
             expect(isSuggestionsBoxVisible()).toBe(true);
-            expect(getSuggestionHeaderText()).toBe('Showing 1 of 1 item');
+            expect(getSuggestionHeaderText()).toBe('Showing item 1 of 1');
         });
 
         it('hides the suggestions list when there is no items to show', function() {
@@ -206,7 +206,7 @@ describe('autoComplete directive', function() {
 
             // Assert
             expect(isSuggestionsBoxVisible()).toBe(false);
-            expect(getSuggestionHeaderText()).toBe('Showing 0 of 0 items');
+            expect(getSuggestionHeaderText()).toBe('No items');
         });
 
         it('hides the suggestions list when there is no items left to show', function() {
@@ -1043,7 +1043,7 @@ describe('autoComplete directive', function() {
 
             // Assert
             expect(isolateScope.options.maxResultsToShow).toBe(10);
-            expect(getSuggestionHeaderText()).toBe('Showing 0 of 0 items');
+            expect(getSuggestionHeaderText()).toBe('No items');
         });
 
         it('limits the number of results to be displayed at a time', function() {
@@ -1058,7 +1058,7 @@ describe('autoComplete directive', function() {
             expect(getSuggestionText(0)).toBe('Item1');
             expect(getSuggestionText(1)).toBe('Item2');
             expect(getSuggestionText(2)).toBe('Item3');
-            expect(getSuggestionHeaderText()).toBe('Showing 3 of 5 items');
+            expect(getSuggestionHeaderText()).toBe('Showing items 1 - 3 of 5');
         });
     });
 

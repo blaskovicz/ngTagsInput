@@ -19,6 +19,21 @@ tags-input .autocomplete {
       margin: 5px;
       margin-top: 0;
     }
+    .suggestion-list-pager {
+      float: right;
+      a[ng-click] {
+        font: $suggestion-header-font;
+        cursor: pointer;
+        text-decoration: underline;
+        line-height: 10pt;
+        font-size: 14pt;
+        &[disabled] {
+          text-decoration: none;
+          cursor: default;
+          pointer-events: none;
+        }
+      }
+    }
   }
 
   .suggestion-list {
